@@ -1,8 +1,21 @@
-@extends('layouts.app')
+@include('includes.header')
+<body>
 
-@section('content')
-<div class="container">
+<!-- PRELOADER -->
+<div class="cssload-container">
+    <div class="cssload-loader"></div>
+</div>
+<!-- end PRELOADER -->
+
+<!-- ******************************************
+START SITE HERE
+********************************************** -->
+
+<div id="wrapper">
+    @include('includes.navigation_detail')
+    <div class="container">
     <div class="row">
+        <hr class="invis">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
                 <div class="panel-heading">Register</div>
@@ -90,4 +103,11 @@
         </div>
     </div>
 </div>
-@endsection
+
+</div>
+
+<script src="js/all.js"></script>
+<script src="js/custom.js"></script>
+
+</body>
+</html>

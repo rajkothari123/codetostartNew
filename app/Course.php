@@ -10,7 +10,7 @@ class Course extends Model
 
 
 	protected $fillable = [
-        'name', 'slug',
+        'name', 'slug','user_id','body','photo_id','username','tagline','status'
     ];
 
 
@@ -24,7 +24,18 @@ class Course extends Model
     }
 
 
+
     public function comment(){
         return $this->hasMany(Comment::class);
     }
+
+
+
+    public function photo(){
+        return $this->belongsTo(Photo::class);
+    }
+
+
+
+
 }

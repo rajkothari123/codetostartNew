@@ -30,7 +30,7 @@
 
         <div class="form-group">
         {!! Form::label("meta_desc","Meta Description") !!}            
-        {!! Form::text("meta_desc",null,['class'=>'form-control']) !!}            
+        {!! Form::text("meta_desc",null,['class'=>'form-control']) !!}
         </div>    
 
         <div class="form-group">
@@ -40,7 +40,7 @@
 
         <div class="form-group">
         {!! Form::label("body","Description") !!}            
-        {!! Form::textarea("body",null,['class'=>'form-control']) !!}
+        {!! Form::textarea("body",null,['id'=>'summernote','class'=>'form-control']) !!}
         </div>    
 
 
@@ -52,7 +52,9 @@
 
         <div class="form-group">        
         {!! Form::submit("Saved As Draft",['class'=>'btn btn-primary']) !!}            
-        </div>    
+        </div>
+
+        
 
 
         {!! Form::close() !!}            
@@ -65,6 +67,9 @@
 <hr>
 
 <script src="http://code.jquery.com/jquery.js"></script>
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.js"></script>
+
+
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>

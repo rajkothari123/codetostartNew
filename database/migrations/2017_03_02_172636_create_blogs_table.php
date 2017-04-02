@@ -20,11 +20,13 @@ class CreateBlogsTable extends Migration
             $table->string('meta_title');            
             $table->string('meta_desc',160);
             $table->integer('photo_id')->nullable(); 
-            $table->integer('user_id')->unsigned()->nullable();           
+            $table->integer('user_id')->unsigned()->nullable();
+            $table->integer('time')->default(5);
             $table->string('title');
             $table->text('body');
             $table->integer('status')->default(0);
             $table->integer('views')->default(0);
+            $table->integer('preference');
             $table->timestamps();
         });
     }

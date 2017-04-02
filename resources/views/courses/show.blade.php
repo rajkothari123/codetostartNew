@@ -1,99 +1,451 @@
-@extends('layouts.app')
+@include('includes.header')
+<body>
 
-@section('content')
+<!-- PRELOADER -->
+{{--<div class="cssload-container">
+    <div class="cssload-loader"></div>
+</div>--}}
+<!-- end PRELOADER -->
+
+<!-- ******************************************
+START SITE HERE
+********************************************** -->
+
+<div id="wrapper">
+@include('includes.navigation_detail')
+<!-- end header -->
+
+    <div class="page-title section lb">
+        <div class="container">
+            <div class="clearfix">
+                <div class="title-area pull-left">
+                    <h2>{{$course->name}} <small>{{$course->tagline}}</small></h2>
+                </div><!-- /.pull-right -->
+                <div class="pull-right hidden-xs">
+                    <div class="bread">
+                        <ol class="breadcrumb">
+                            <li><a href="#">Home</a></li>
+                            <li class="active">Single Course</li>
+                        </ol>
+                    </div><!-- end bread -->
+                </div><!-- /.pull-right -->
+            </div><!-- end clearfix -->
+        </div>
+    </div><!-- end page-title -->
+
+    <div class="section">
+        <div class="container">
+            <div class="row">
+                <div class="content col-md-9 col-sm-12">
+                    <div class="course-list normal-list">
+                        <div class="video-wrapper course-widget clearfix">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="post-media">
+                                        <div class="entry">
+                                            <img src="/images/{{ $course->photo ? $course->photo->photo : '' }}" alt="" class="img-responsive">
+                                        </div>
+                                    </div><!-- end media -->
+                                    <div class="course-meta clearfix">
+                                        <div class="pull-left">
+                                            <p><i class="fa fa-users"></i> {{$course->user->count()}}</p>
+                                        </div>
+
+                                        <div class="pull-right">
+                                            <p><i class="fa fa-comment-o"></i> {{$course->comment->count()}}</p>
+                                        </div>
+
+                                        <div style="text-align: center;">
+                                            <p><i class="fa fa-clock-o"></i>
+
+                                                @foreach($course_times as $course_time)
+                                                    {{round($course_time->times)}} Mins
+
+                                                @endforeach
+                                            </p>
+                                        </div>
+
+                                    </div><!-- end meta -->
+                                    <hr>
+
+                                    @if(Auth::guest())
+                                        <a href="{{ route('login') }}" role="button" class="btn btn-success btn-block">Start Learning</a>
+                                    @elseif($is_enrolled)
+                                        <a href="#" class="btn btn-success btn-block">Enrolled</a>
+                                    @else
+                                        {!! Form::model($course,['method'=>'POST','action'=>['CourseController@enroll',$course->id]]) !!}
+                                        {{ Form::hidden('course_id', $course->id) }}
+                                        <div class="form-group">
+                                            {!! Form::submit("Enroll",['class'=>'btn btn-success btn-block']) !!}
+                                        </div>
+                                        {!! Form::close() !!}
+                                    @endif
+                                </div><!-- end col-->
+
+                                <div class="col-md-8">
+                                    <div class="widget-title clearfix">
+                                        <h3>Why You Should Start Reading About This Course?</small></h3>
+                                        <hr>
+                                        <p>{!! $course->body !!}</p>
 
 
-<main class="container">
-    <div class="container-fluid">
-    <div class="jumbotron">
-        <h1>{{$course->name}}</h1>
+                                        <hr>
+
+                                        <div class="bottom-line clearfix">
+                                            <div class="pull-left">
+                                                <a href="member-profile.html" class="readmore">By : {{$course->username}}</a>
+                                            </div>
+                                            <div class="pull-right">
+                                                <a href="course-single.html" class="btn btn-sm btn-inverse">FREE</a>
+                                            </div>
+                                        </div><!-- end bottom -->
+                                    </div><!-- end title -->
+                                </div><!-- end col -->
+                            </div>
+                        </div><!--widget -->
+                    </div><!-- end row -->
+
+                    <hr class="largeinvis">
+
+                    <div class="widget-title">
+                        <h3>Course Lessons</h3>
+                        <hr>
+                    </div><!-- end widget-title -->
+
+                    @if(Auth::check() && $is_enrolled && $total!=0)
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="70"
+                                 aria-valuemin="0" aria-valuemax="100" style="width:{{$total}}%">
+                                {{$total}}% Completed
+                            </div>
+                        </div>
+                    @endif
+
+                    @if(Auth::check() && $is_enrolled && $total==0)
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped active" role="progressbar"
+                                 aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:40%">
+                                Track Your Course Progress Here :)
+                            </div>
+                        </div>
+                    @endif
+
+                    <div class="course-list normal-list">
+                        <div class="video-wrapper course-widget clearfix">
+                            <div class="course-table">
+                                @foreach($course_categories as $category)
+                                    <table class="table table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th width="25%">Module</th>
+                                            <th width="25%">{{$category->name}}</th>
+                                            <th width="25%">Time</th>
+                                            @if($is_enrolled)
+                                                <th width="25%">Read</th>
+                                            @else
+                                                <th width="25%">Actions</th>
+                                            @endif
+
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @foreach($category->blog as $blog) <!-- Original Blogs : cipla ,phizer in blogs table-->
+                                        <tr>
+                                            <td><i class="fa fa-sticky-note-o" aria-hidden="true"></i></td>
+                                            <td>
+                                                @if($is_enrolled)
+                                                    <a href="{{  action('BlogController@show',[$blog->slug])  }}" > {{$blog->title}}</a>
+                                                @else
+                                                    <a href="javascript:AlertIt();">{{$blog->title}}</a>
+                                                @endif
+                                            </td>
+                                            <td>{{$blog->time}} Min</td>
+                                            @if($is_enrolled)
+                                                @if($blogs->count()=='')
+                                                    <td><i  class="fa fa-close"></i></td>
+                                                @endif
 
 
-            @if(Auth::guest())
-                <a href="{{ route('login') }}" role="button" class="btn btn-success btn-large">Start Learning</a>
-            @elseif($is_enrolled)    
-                <button  class="btn btn-success btn-large">Enrolled</button>
-            @else 
-                {!! Form::model($course,['method'=>'POST','action'=>['CourseController@enroll',$course->id]]) !!}
-                {{ Form::hidden('course_id', $course->id) }}
-                <div class="form-group">        
-                {!! Form::submit("Enroll",['class'=>'btn btn-success']) !!}            
-                </div>    
-                {!! Form::close() !!}
-            @endif    
-        
+                                                @foreach($blogs as $bloge)
+                                                    @if($bloge->blog_id==$blog->id && Auth::user()->id==$bloge->user_id)
+                                                        <td><i  class="fa fa-check"></i></td>
+                                                    @endif
+                                                @endforeach
 
 
-    </div>
+                                            @else
+                                                <td>Please Enroll</td>
+                                            @endif
+                                        </tr>
+                                        @endforeach
 
-        
+                                        </tbody>
+                                    </table>
+                                @endforeach
 
 
-        <div class="col-sm-8 col-sm-offset-1">
-        @foreach($course_categories as $category)
-            <article>
-            <h4> {{$category->name}}</h4>
-                @foreach($category->blog as $blog)
-                    <article>
-                        <p><a href="{{  action('BlogController@show',[$blog->slug])  }}" /> {{$blog->title}}</a></p>
-                        @foreach($blogs as $bloge)
-                            @if($bloge->blog_id==$blog->id && Auth::user()->id==$bloge->user_id)
-                                <p>Done</p>
-                            @endif
+                            </div><!-- end course-table -->
+                        </div><!--widget -->
+                    </div><!-- end row -->
+
+                    <hr class="largeinvis">
+
+                    {{--<div class="widget-title">
+                        <h3>Related Courses</h3>
+                        <hr>
+                    </div><!-- end widget-title -->
+
+                    <div class="row course-list">
+                        @foreach($related_courses as $related_course)
+                        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 wow fadeIn">
+                            <div class="video-wrapper course-widget clearfix">
+                                <div class="post-media">
+                                    <div class="entry">
+                                        <img src="/images/{{ $related_course->photo ? $related_course->photo : '' }}" alt="" class="img-responsive">
+                                        <div class="magnifier">
+                                            <div class="magni-desc">
+                                                <a class="secondicon" href="course-single.html"> <span class="oi" data-glyph="link-intact" title="Read More" aria-hidden="false"></span></a>
+                                            </div><!-- end team-desc -->
+                                        </div><!-- end magnifier -->
+                                    </div>
+                                </div><!-- end media -->
+
+                                <div class="widget-title clearfix">
+                                    <h3><a href="course-single.html">{{$related_course->name}}</a></h3>
+
+                                    <hr>
+                                    <div class="bottom-line clearfix">
+                                        <div class="pull-left">
+                                            <a href="member-profile.html" class="readmore"><img src="upload/testi_01.png" class="img-circle" alt="">Michael Denson</a>
+                                        </div>
+
+                                        <div class="pull-right">
+                                            <a href="course-single.html" class="btn btn-sm btn-inverse">$20.00</a>
+                                        </div>
+                                    </div><!-- end bottom -->
+                                </div><!-- end title -->
+
+                                <div class="course-meta clearfix">
+                                    <div class="pull-left">
+                                        <p><i class="fa fa-users"></i> 21</p>
+                                    </div>
+                                    <div class="pull-right">
+                                        <div class="rating">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                        </div>
+                                    </div>
+                                </div><!-- end meta -->
+                            </div><!--widget -->
+                        </div><!-- end col -->
+
                         @endforeach
-
-                    </article>
-                @endforeach
-            </article>
-        @endforeach
-    </div>
-
-
-    <div class="col-sm-6">
-        @if(Auth::check() && $is_enrolled)
-            <h4>Comments</h4>
-            <p>{{Auth::user()->name}}, your comments please</p>
-            {!! Form::open(['method'=>'POST','action'=>'CommentController@store']) !!}
-            {{ Form::hidden('course_id', $course->id) }}
-            <div class="form-group">
-                {!! Form::label("body","Description") !!}
-                {!! Form::textarea("body",null,['class'=>'form-control','rows' => 2, 'cols' => 40]) !!}
-            </div>
-            <div class="form-group">
-                {!! Form::submit("Submit Comment",['class'=>'btn btn-primary']) !!}
-            </div>
+                    </div>--}}
+                    @if(Auth::check() && $is_enrolled)
+                        <h4>Comments</h4>
+                        <p>{{Auth::user()->name}}, your comments please</p>
+                        {!! Form::open(['method'=>'POST','action'=>'CommentController@store']) !!}
+                        {{ Form::hidden('course_id', $course->id) }}
+                        <div class="form-group">
+                            {!! Form::label("body","Description") !!}
+                            {!! Form::textarea("body",null,['class'=>'form-control','rows' => 2, 'cols' => 40]) !!}
+                        </div>
+                        <div class="form-group">
+                            {!! Form::submit("Submit Comment",['class'=>'btn btn-primary']) !!}
+                        </div>
 
 
-            {!! Form::close() !!}
-        @endif
-        </div>
+                        {!! Form::close() !!}
+                    @endif
 
-        <div class="col-sm-6">
-
-            <h4>All Comments</h4>
-
-            @foreach($course->comment->reverse() as $comments)
-                {{$comments->user->name}} commented:
-                "{{$comments->body}}" . Commented on : {{$comments->created_at->diffForHumans()}}
-                <hr>
-            @endforeach
-        </div>
-
-        <h3>Related Courses</h3>
-        @foreach($related_courses as $related_course)
-            <p>{{$related_course->name}}</p>
-        @endforeach
-
-        <div>
-</div>
-</div>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="widget-title">
+                                    <h3>Comments ({{$course->comment->count()}})</h3>
+                                    <hr>
+                                </div><!-- end title -->
 
 
+                                @foreach($course->comment->reverse() as $comments)
+                                    <div class="friendbox clearfix">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                {{-- <div class="team-member-img">
+                                                     <a href="#"><img src="upload/testi_01.png" alt="team member img" class="img-responsive alignleft"></a>
+                                                 </div>--}}
+                                                <div class="team-desc">
+                                                    <h3><a href="#">{{$comments->user->name}}</a></h3>
+                                                    {{--<small>Student</small>--}}
+                                                    <small><a href="#">{{$comments->created_at->diffForHumans()}}</a></small>
+                                                    {{--<a href="#" class="btn btn-primary btn-sm">Unfollow</a>--}}
+                                                </div><!-- end team-desc -->
+                                            </div>
+                                            <div class="col-md-9">
+                                                <p>{{$comments->body}}</p>
+                                                {{--<a href="#" class="btn btn-default btn-sm">Reply</a>--}}
+                                            </div><!-- end col -->
+                                        </div><!-- end row -->
+                                    </div><!-- end friendbox -->
+                                @endforeach
+
+
+                            </div><!-- end col -->
+                        </div><!-- end row -->
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <nav>
+                                    <ul class="pagination">
+                                        <li>
+                                            <a href="#" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                        <li><a href="#">1</a></li>
+                                        <li><a href="#">2</a></li>
+                                        <li>
+                                            <a href="#" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div><!-- end col -->
+                        </div><!-- end row -->
+                    </div><!-- end container -->
+                </div><!-- end content -->
 
 
 
-</main>
+                <div class="sidebar col-md-3 col-sm-12">
+                    {{--<div class="widget clearfix">
+                        <div class="widget-title">
+                            <h3>Search</h3>
+                            <hr>
+                        </div><!-- end widget-title -->
+                        <form>
+                            <input type="text" name="search" class="form-control" placeholder="Site search...">
+                        </form>
+                    </div><!-- end widget -->--}}
 
 
-<hr>
-@endsection
+
+                    <div class="widget clearfix">
+                        <div class="widget-title">
+                            <h3>Related Free Courses</h3>
+                            <hr>
+                        </div><!-- end widget-title -->
+
+                        @foreach($related_courses as $related_course)
+                            <div class="related-posts">
+                                <div class="entry">
+                                    <a href="#"><img src="/images/{{ $related_course->photo }}" alt="" class="img-responsive"></a>
+                                    <p><a href="blog-single.html" title="">{{$related_course->name}}</a></p>
+
+                                    <hr class="largeinvis">
+                                </div><!-- end entry -->
+                            </div><!-- end related -->
+                        @endforeach
+                    </div><!-- end widget -->
+
+
+
+
+
+
+                </div><!-- end col -->
+            </div><!-- end row -->
+        </div><!-- end container -->
+    </div><!-- end section -->
+
+    <footer class="copyrights">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 col-sm-12">
+                    <ul class="check">
+                        <li><a href="#">PSD to HTML</a></li>
+                        <li><a href="#">Templates</a></li>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">Get a Support</a></li>
+                        <li><a href="#">Affiliate</a></li>
+                    </ul><!-- end check -->
+                </div><!-- end col -->
+                <div class="col-md-3 col-sm-12">
+                    <ul class="check">
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Terms of Usage</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="page-pricing.html">Pricing & Plan</a></li>
+                        <li><a href="page-become-a-trainer.html">Become a Trainer</a></li>
+                    </ul><!-- end check -->
+                </div><!-- end col -->
+
+                <div class="col-md-3 col-sm-12">
+                    <ul class="check">
+                        <li><a href="http://twitter.com/psdconverthtml" target="_blank"><i class="fa fa-twitter"></i> Twitter</a></li>
+                        <li><a href="#" target="_blank"><i class="fa fa-facebook"></i> Facebook</a></li>
+                        <li><a href="#" target="_blank"><i class="fa fa-google-plus"></i> Google Plus</a></li>
+                        <li><a href="#" target="_blank"><i class="fa fa-pinterest"></i> Pinterest</a></li>
+                        <li><a href="#" target="_blank"><i class="fa fa-dribbble"></i> Dribbble</a></li>
+                    </ul><!-- end check -->
+                </div><!-- end col -->
+
+                <div class="col-md-3 col-sm-12">
+                    <div class="newsletter">
+                        <p>Your email is safe with us and we hate spam as much as you do.</p>
+                        <form class="form-inline">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Enter your email here..">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Subscribe</button>
+                        </form>
+                    </div>
+                </div>
+            </div><!-- end row -->
+
+            <hr>
+
+            <div class="row">
+                <div class="col-md-6 col-sm-12">
+                    <div class="copylinks">
+                        <p>Copyrights &copy; 2016 <a href="http://psdconverthtml.com"> PSD to HTML</a> All Rights Reserved.</p>
+                    </div><!-- end links -->
+                </div><!-- end col -->
+
+                <div class="col-md-6 col-sm-12">
+                    <div class="footer-social text-right">
+                        <a class="dmtop" href="#"><i class="fa fa-angle-up"></i></a>
+                    </div>
+                </div><!-- end col -->
+            </div><!-- end row -->
+        </div><!-- end container -->
+    </footer><!-- end copyrights -->
+</div><!-- end wrapper -->
+
+
+
+
+<script type="text/javascript">
+    function AlertIt() {
+        var answer = alert("Oops...", "Something went wrong!", "error");
+
+    }
+</script>
+
+
+<!-- ******************************************
+/END SITE
+********************************************** -->
+
+<!-- ******************************************
+DEFAULT JAVASCRIPT FILES
+********************************************** -->
+<script src="js/all.js"></script>
+<script src="js/custom.js"></script>
+
+</body>
+</html>

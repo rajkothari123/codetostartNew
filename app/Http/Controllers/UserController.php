@@ -8,6 +8,8 @@ use App\User;
 
 use App\Blog;
 
+use DB;
+
 use App\Role;
 
 use App\Photo;
@@ -70,8 +72,28 @@ class UserController extends Controller
      */
     public function show($username)
     {
+        if(Auth::check()){
         $user=User::whereUsername($username)->first();
-        return view('users.show',compact('user'));
+        $courses_enrolled=DB::table('course_user')
+            ->join("courses as c", "c.id", "=", "course_user.course_id")
+            ->where("course_user.user_id", "=", Auth::user()->id)
+            ->select("c.name","c.slug","course_user.created_at")
+            ->get();
+
+
+        $user_favourites=DB::table('favourites_blog')
+            ->join("blogs as b", "b.id", "=", "favourites_blog.blog_id")
+            ->where("favourites_blog.user_id", "=", Auth::user()->id)
+            ->select("b.title","b.slug")
+            ->get();
+
+
+        return view('users.show',compact('user','courses_enrolled','user_favourites'));
+    }
+        else
+            $user=User::whereUsername($username)->first();
+            return view('users.show',compact('user'));
+
     }
 
     /**

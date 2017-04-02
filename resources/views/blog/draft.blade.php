@@ -14,7 +14,7 @@
         @foreach($blogs as $blog)
         <article>
         <h1><a href="#" />{{$blog->title}}</a></h1> <br>
-        {{$blog->body}}
+        {!! $blog->body !!}
 
         {!! Form::model($blog,['method'=>'PATCH','action'=>['BlogController@publish',$blog->id],'files'=>'true']) !!}
         <div class="form-group">        

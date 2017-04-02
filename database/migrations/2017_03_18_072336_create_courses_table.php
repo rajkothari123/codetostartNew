@@ -18,6 +18,13 @@ class CreateCoursesTable extends Migration
             $table->increments('id');
             $table->string('slug')->unique();
             $table->string('name');
+            $table->string('tagline');
+            $table->text('body');
+            $table->integer('photo_id')->nullable();
+            $table->integer('user_id')->unsigned()->nullable();
+            $table->string('username');
+            $table->integer('status')->default(0);
+
             
             $table->timestamps();
         });

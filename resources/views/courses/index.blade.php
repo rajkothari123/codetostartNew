@@ -1,60 +1,213 @@
-@extends('layouts.app')
+@include('includes.header')
+<body>
 
-@section('content')
-    
+<!-- PRELOADER -->
+{{--
+<div class="cssload-container">
+    <div class="cssload-loader"></div>
+</div>
+--}}
+<!-- end PRELOADER -->
 
-<main class="container">
-    <div class="container-fluid">
-     <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div style="background-color: #fff;" class="jumbotron">
-      <div class="container">
-        <h1 class="display-3">Start, Learn, Code!</h1>
-        <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
-        <p><a class="btn btn-success btn-lg" href="#" role="button">Learn more &raquo;</a></p>
-      </div>
-    </div>
+<!-- ******************************************
+START SITE HERE
+********************************************** -->
 
-    <div class="container">
-      <!-- Example row of columns -->
-      <div class="row">
-        <div class="col-md-4">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
+<div id="wrapper">
+@include('includes.navigation_detail')
+<!-- end header -->
+
+    <div class="page-title section lb">
+        <div class="container">
+            <div class="clearfix">
+                <div class="title-area pull-left">
+                    <h2>Course List <small>A basic standard course list page.</small></h2>
+                </div><!-- /.pull-right -->
+                <div class="pull-right hidden-xs">
+                    <div class="bread">
+                        <ol class="breadcrumb">
+                            <li><a href="#">Home</a></li>
+                            <li class="active">Courses</li>
+                        </ol>
+                    </div><!-- end bread -->
+                </div><!-- /.pull-right -->
+            </div><!-- end clearfix -->
         </div>
-        <div class="col-md-4">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
-       </div>
-        <div class="col-md-4">
-          <h2>Heading</h2>
-          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-          <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
+    </div><!-- end page-title -->
+    <br>
+
+
+    @if (session('info'))
+        <div style="text-align: center;" class="alert alert-success" role="alert">
+            <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+            {{ session('info') }}
         </div>
-      </div>
+    @endif
+
+
+    <div class="section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="shoptop clearfix">
+                        <div class="pull-left hidden-xs">
+                            <p> Showing 1–9 of 12 results</p>
+                        </div><!-- end col -->
+
+                        <div class="pull-right">
+                            <select class="form-control">
+                                <option>Sort Descending</option>
+                                <option>Sort by multiplying</option>
+                                <option>Alphabetical order</option>
+                            </select>
+                        </div><!-- end col -->
+                    </div><!--- end shop-top -->
+                </div><!-- end col -->
+            </div><!-- end row -->
+
+            <hr class="invis">
+
+            @foreach($courses as $course)
+                <div class="course-list normal-list">
+                    <div class="video-wrapper course-widget clearfix">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="post-media">
+                                    <div class="entry">
+                                        <img src="/images/{{ $course->photo ? $course->photo->photo : '' }}" alt="" class="img-responsive">
+                                        <div class="magnifier">
+                                            <div class="magni-desc">
+                                                <a class="secondicon" href="course-single.html"> <span class="oi" data-glyph="link-intact" title="Read More" aria-hidden="false"></span></a>
+                                            </div><!-- end team-desc -->
+                                        </div><!-- end magnifier -->
+                                    </div>
+                                </div><!-- end media -->
+                                <div class="course-meta clearfix">
+                                    <div class="pull-left">
+                                        <p><i class="fa fa-users"></i> {{$course->user->count()}}</p>
+                                    </div>
+                                    <div class="pull-right">
+                                        <div class="rating">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                        </div>
+                                    </div>
+                                </div><!-- end meta -->
+                            </div><!-- end col-->
+
+                            <div class="col-md-9">
+                                <div class="widget-title clearfix">
+                                    <h3><a href="{{ route('courses.show',$course->slug) }}">{{$course->name}}</a></h3>
+                                    <hr>
+                                    <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accidentx..</p>
+                                    <hr>
+
+                                    <div class="bottom-line clearfix">
+                                        <div class="pull-left">
+                                            <a href="member-profile.html" class="readmore"><img src="upload/testi_01.png" class="img-circle" alt="">{{$course->username}}</a>
+                                        </div>
+                                        <div class="pull-right">
+                                            <a href="course-single.html" class="btn btn-sm btn-inverse">FREE</a>
+                                        </div>
+                                    </div><!-- end bottom -->
+                                </div><!-- end title -->
+                            </div><!-- end col -->
+                        </div>
+                    </div><!--widget -->
+                </div><!-- end row -->
+
+            @endforeach
 
 
 
-    <div class="col-sm-8 col-sm-offset-1">
+            <div class="row text-center">
+                <div class="col-md-12">
+                    <nav>
+                        <ul class="pagination">
+                            {!! $courses->links() !!}
+                        </ul>
+                    </nav>
+                </div><!-- end col -->
+            </div><!-- end row -->
+        </div><!-- end container -->
+    </div><!-- end section -->
 
- <h2>All Courses</h2>
-        @foreach($courses as $course)
+    <footer class="copyrights">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 col-sm-12">
+                    <ul class="check">
+                        <li><a href="#">PSD to HTML</a></li>
+                        <li><a href="#">Templates</a></li>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">Get a Support</a></li>
+                        <li><a href="#">Affiliate</a></li>
+                    </ul><!-- end check -->
+                </div><!-- end col -->
+                <div class="col-md-3 col-sm-12">
+                    <ul class="check">
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Terms of Usage</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="page-pricing.html">Pricing & Plan</a></li>
+                        <li><a href="page-become-a-trainer.html">Become a Trainer</a></li>
+                    </ul><!-- end check -->
+                </div><!-- end col -->
 
-        <article>
-        <h4><a href="{{ route('courses.show',$course->slug) }}" />{{$course->name}}</a></h4>       
+                <div class="col-md-3 col-sm-12">
+                    <ul class="check">
+                        <li><a href="http://twitter.com/psdconverthtml" target="_blank"><i class="fa fa-twitter"></i> Twitter</a></li>
+                        <li><a href="#" target="_blank"><i class="fa fa-facebook"></i> Facebook</a></li>
+                        <li><a href="#" target="_blank"><i class="fa fa-google-plus"></i> Google Plus</a></li>
+                        <li><a href="#" target="_blank"><i class="fa fa-pinterest"></i> Pinterest</a></li>
+                        <li><a href="#" target="_blank"><i class="fa fa-dribbble"></i> Dribbble</a></li>
+                    </ul><!-- end check -->
+                </div><!-- end col -->
 
-        {{$course->user->count()}}
-        
-        </article>
+                <div class="col-md-3 col-sm-12">
+                    <div class="newsletter">
+                        <p>Your email is safe with us and we hate spam as much as you do.</p>
+                        <form class="form-inline">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Enter your email here..">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Subscribe</button>
+                        </form>
+                    </div>
+                </div>
+            </div><!-- end row -->
 
-        @endforeach
+            <hr>
 
+            <div class="row">
+                <div class="col-md-6 col-sm-12">
+                    <div class="copylinks">
+                        <p>Copyrights &copy; 2016 <a href="http://psdconverthtml.com"> PSD to HTML</a> All Rights Reserved.</p>
+                    </div><!-- end links -->
+                </div><!-- end col -->
 
-    </div>
-    </div>
-</main>
+                <div class="col-md-6 col-sm-12">
+                    <div class="footer-social text-right">
+                        <a class="dmtop" href="#"><i class="fa fa-angle-up"></i></a>
+                    </div>
+                </div><!-- end col -->
+            </div><!-- end row -->
+        </div><!-- end container -->
+    </footer><!-- end copyrights -->
+</div><!-- end wrapper -->
 
+<!-- ******************************************
+/END SITE
+********************************************** -->
 
-<hr>
-@endsection
+<!-- ******************************************
+DEFAULT JAVASCRIPT FILES
+********************************************** -->
+<script src="js/all.js"></script>
+<script src="js/custom.js"></script>
+
+</body>
+</html>

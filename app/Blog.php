@@ -35,4 +35,6 @@ class Blog extends Model
     public function course_status(){
         return $this->belongsTo(CourseStatus::class);
     }
+
+
 }

@@ -32,7 +32,7 @@ Auth::routes();
 Route::get('redirect','SocialAuthController@redirect');
 Route::get('callback','SocialAuthController@callback');
 
-Route::get('/home', 'HomeController@index');
+Route::get('/home', 'HomeController@home');
 
 Route::get('/', 'BlogController@index');
 
@@ -60,11 +60,14 @@ Route::resource('categories', 'CategoryController');
 Route::resource('comments', 'CommentController');
 Route::resource('subcategories', 'SubCategory');
 Route::resource('courses', 'CourseController');
+Route::get('/course/draft', 'CourseController@draft');
+Route::patch('/course/publish/{id}', 'CourseController@publish');
 Route::post('/courses/enroll', 'CourseController@enroll');
+Route::post('/blog/favourites', 'BlogController@favourites');
 Route::resource('media', 'PhotosController');
 Route::get('userlist','UserController@userlist');
 Route::resource('users', 'UserController');
-Route::get('/{username?}', array('as' =>'show','uses'=>'UserController@show'));
+/*Route::get('/{username?}', array('as' =>'show','uses'=>'UserController@show'));*/
 
 
 

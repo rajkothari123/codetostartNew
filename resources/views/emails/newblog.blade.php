@@ -14,8 +14,8 @@
 
     
 
-    <h2>Hi {{ $user->name}},</h2>
-    <h2>A new blog {{ $blog->title }} has been posted</h2>
+    <h2>Hi {{ $user->name}}, {{Auth::user()->name}} have commented on the course</h2>
+
     
 </body>
 </html>

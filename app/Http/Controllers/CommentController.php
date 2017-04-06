@@ -3,6 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Comment;
+use App\Course;
+use App\User;
+use DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Redirect;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -40,8 +46,24 @@ class CommentController extends Controller
         $input['body']=$request->body;
         $input['course_id']=$request->course_id;
         $input['user_id']=Auth::user()->id;
+        $input['email']=Auth::user()->email;
+        $input['name']=Auth::user()->name;
 
         $comment=Comment::create($input);
+
+        $users=DB::table('course_comments')
+            ->where('course_comments.course_id', '=', $input['course_id'])
+            /*->where('course_comments.user_id', '<>', $input['user_id'])*/
+            ->select("email","name")->distinct()
+            ->get();
+
+        foreach ($users as $user) {
+
+            Mail::send('emails.newblog',['user'=>$user],function($message) use ($user){
+            $message->to($user->email)->from('raj.kothari90@gmail.com','Raj Kothari')->subject('A New Blog Has been posted');
+            });
+
+        }
 
         return redirect()->back();
     }

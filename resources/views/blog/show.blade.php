@@ -28,13 +28,13 @@ START SITE HERE
                     <h2>{{ $blog->title}}</h2>
 
                     <ul class="list-inline">
-                        <li><i class="fa fa-user-plus"></i> <a href="" class="">{{$blog->user->name}}</a></li>
+                        <li><i class="fa fa-clock-o"></i> <a href="" class="">{{$blog->time}} Mins</a></li>
                         <li><i class="fa fa-eye"></i> {{$blog->views}}</li>
                         @foreach($blog->category as $category)
                             <li><i class="fa fa-folder-open-o"></i> {{$category->name}}</li>
                         @endforeach
                         @foreach($course_name as $courseid)
-                        <li><i class="fa fa-newspaper-o"> {{$courseid->name}}</i> </li>
+                        <li><i class="fa fa-newspaper-o"><a href="{{ route('courses.show',$courseid->slug) }}"> {{$courseid->name}}</a></i> </li>
                         @endforeach
 
 
@@ -78,7 +78,7 @@ START SITE HERE
                     <div class="post-padding">
                         <div class="blog-big-title clearfix ">
                             @if($is_status)
-                            <h4><i class="fa fa-check-circle-o fa-1x text-success" ></i> You have Read</h4>
+                                <h4><i class="fa fa-check-circle-o fa-1x text-success" ></i><span style="color: #27ae60;"> You have Read</span></h4>
                             @else
                             <h4><i class="fa fa-hand-o-down fa-1x text-success" ></i> Continue Reading</h4>
                              @endif
@@ -89,16 +89,18 @@ START SITE HERE
 
                         <hr>
 
+{{--
                         <div class="tags clearfix">
                             <a href="#">web design</a>
                             <a href="#">club</a>
                             <a href="#">html5</a>
                             <a href="#">css3</a>
                         </div><!-- end tags -->
+--}}
 
                     </div><!-- end post-padding -->
 
-                    <hr class="invis">
+                    {{--<hr class="invis">
 
                     <div class="row">
                         <div class="col-md-12">
@@ -106,9 +108,9 @@ START SITE HERE
                                 <a href="#"><img src="upload/banner_02.jpg" alt="" class="img-responsive"></a>
                             </div>
                         </div>
-                    </div><!-- end row -->
+                    </div><!-- end row -->--}}
 
-                    <div class="post-padding">
+                    {{--<div class="post-padding">
                         <div class="content-widget clearfix">
                             <div class="widget-title">
                                 <h3>5 Comments</h3>
@@ -251,10 +253,27 @@ START SITE HERE
                             <!-- end commentform -->
                         </div>
                         <!-- end postpager -->
-                    </div><!-- end post-padding -->
+                    </div><!-- end post-padding -->--}}
                 </div><!-- end content -->
 
                 <div class="sidebar col-md-3 col-sm-12">
+
+                    <div class="widget clearfix">
+                        <div class="widget-title">
+                            <h3>Previous Topic</h3>
+                            <hr>
+                        </div><!-- end widget-title -->
+
+                        @foreach($previous_blog as $p)
+                            <div class="related-posts">
+                                <div class="entry">
+                                    <p><a href="{{ action('BlogController@show',[$p->slug])  }}" title="">{{$p->title}}</a></p>
+                                    <i class="fa fa-eye"></i> {{$p->views}}
+                                    <hr class="largeinvis">
+                                </div><!-- end entry -->
+                            </div><!-- end related -->
+                        @endforeach
+                    </div><!-- end widget -->
 
                     <div class="widget clearfix">
                         <div class="widget-title">
@@ -262,11 +281,11 @@ START SITE HERE
                             <hr>
                         </div><!-- end widget-title -->
 
-                        @foreach($related_blogs as $related_blog)
+                        @foreach($next_blogs as $next_blog)
                             <div class="related-posts">
                                 <div class="entry">
-                                    <p><a href="blog-single.html" title="">{{$related_blog->title}}</a></p>
-                                    <i class="fa fa-eye"></i> {{$related_blog->views}}
+                                    <p><a href="{{ action('BlogController@show',[$next_blog->slug])  }}" title="">{{$next_blog->title}}</a></p>
+                                    <i class="fa fa-eye"></i> {{$next_blog->views}}
                                     <hr class="largeinvis">
                                 </div><!-- end entry -->
                             </div><!-- end related -->
@@ -279,68 +298,7 @@ START SITE HERE
         </div><!-- end container -->
     </div><!-- end section -->
 
-    <footer class="copyrights">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-3 col-sm-12">
-                    <ul class="check">
-                        <li><a href="#">PSD to HTML</a></li>
-                        <li><a href="#">Templates</a></li>
-                        <li><a href="#">Documentation</a></li>
-                        <li><a href="#">Get a Support</a></li>
-                        <li><a href="#">Affiliate</a></li>
-                    </ul><!-- end check -->
-                </div><!-- end col -->
-                <div class="col-md-3 col-sm-12">
-                    <ul class="check">
-                        <li><a href="#">Blog</a></li>
-                        <li><a href="#">Terms of Usage</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="page-pricing.html">Pricing & Plan</a></li>
-                        <li><a href="page-become-a-trainer.html">Become a Trainer</a></li>
-                    </ul><!-- end check -->
-                </div><!-- end col -->
-
-                <div class="col-md-3 col-sm-12">
-                    <ul class="check">
-                        <li><a href="http://twitter.com/psdconverthtml" target="_blank"><i class="fa fa-twitter"></i> Twitter</a></li>
-                        <li><a href="#" target="_blank"><i class="fa fa-facebook"></i> Facebook</a></li>
-                        <li><a href="#" target="_blank"><i class="fa fa-google-plus"></i> Google Plus</a></li>
-                        <li><a href="#" target="_blank"><i class="fa fa-pinterest"></i> Pinterest</a></li>
-                        <li><a href="#" target="_blank"><i class="fa fa-dribbble"></i> Dribbble</a></li>
-                    </ul><!-- end check -->
-                </div><!-- end col -->
-
-                <div class="col-md-3 col-sm-12">
-                    <div class="newsletter">
-                        <p>Your email is safe with us and we hate spam as much as you do.</p>
-                        <form class="form-inline">
-                            <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Enter your email here..">
-                            </div>
-                            <button type="submit" class="btn btn-primary">Subscribe</button>
-                        </form>
-                    </div>
-                </div>
-            </div><!-- end row -->
-
-            <hr>
-
-            <div class="row">
-                <div class="col-md-6 col-sm-12">
-                    <div class="copylinks">
-                        <p>Copyrights &copy; 2016 <a href="http://psdconverthtml.com"> PSD to HTML</a> All Rights Reserved.</p>
-                    </div><!-- end links -->
-                </div><!-- end col -->
-
-                <div class="col-md-6 col-sm-12">
-                    <div class="footer-social text-right">
-                        <a class="dmtop" href="#"><i class="fa fa-angle-up"></i></a>
-                    </div>
-                </div><!-- end col -->
-            </div><!-- end row -->
-        </div><!-- end container -->
-    </footer><!-- end copyrights -->
+    @include('includes.footer')
 </div><!-- end wrapper -->
 
 <!-- ******************************************

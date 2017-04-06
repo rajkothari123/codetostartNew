@@ -2,6 +2,7 @@
 
 namespace App;
 
+use DB;
 use Illuminate\Database\Eloquent\Model;
 
 class Course extends Model
@@ -33,6 +34,22 @@ class Course extends Model
 
     public function photo(){
         return $this->belongsTo(Photo::class);
+    }
+
+
+    public function time($id){
+         $a=DB::table('blogs')
+            ->join("blog_category as bc", "bc.blog_id", "=", "blogs.id")
+            ->join("categories as c", "c.id", "=", "bc.category_id")
+            ->where("c.course_id", "=", $id)
+            ->select(DB::raw("SUM(time) as times"))
+            ->get('id');
+
+        foreach ($a as $item){
+            return $item->times;
+        }
+
+
     }
 
 

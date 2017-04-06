@@ -29,6 +29,21 @@ class CourseController extends Controller
     {
         $courses=Course::latest()->paginate(5);
 
+
+
+
+
+        $course_times = DB::table('blogs')
+            ->join("blog_category as bc", "bc.blog_id", "=", "blogs.id")
+            ->join("categories as c", "c.id", "=", "bc.category_id")
+            ->join("courses as cu", "cu.id", "=", "c.course_id")
+            ->select(DB::raw("SUM(time) as times"))
+            ->groupBy('cu.id')
+            ->get();
+
+
+
+
         return view('courses.index',compact('courses'));
 
     }
@@ -114,22 +129,12 @@ class CourseController extends Controller
         }
 
 
-
-
         $course_times = DB::table('blogs')
             ->join("blog_category as bc", "bc.blog_id", "=", "blogs.id")
             ->join("categories as c", "c.id", "=", "bc.category_id")
             ->where("c.course_id", "=", $course['id'])
             ->select(DB::raw("SUM(time) as times"))
             ->get();
-
-
-
-
-
-
-
-
 
 
         //Get count of total number of blogs (syllabus) of current course

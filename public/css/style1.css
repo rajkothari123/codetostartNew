@@ -3755,3 +3755,10 @@ h6,
 .com{
     color: grey;
 }
+
+.design{
+    background-color: azure;
+    padding: 10px 10px 10px 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}

@@ -10,7 +10,7 @@ class Comment extends Model
 
 
     protected $fillable = [
-        'body', 'user_id','course_id'
+        'body', 'user_id','course_id','email','name'
     ];
 
 
@@ -18,4 +18,6 @@ class Comment extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
+
+
 }

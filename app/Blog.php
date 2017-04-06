@@ -3,6 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use DB;
+use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -34,6 +36,18 @@ class Blog extends Model
 
     public function course_status(){
         return $this->belongsTo(CourseStatus::class);
+    }
+
+    public function check_read_status($id){
+        $blogs=DB::table('course_status')
+            ->where('course_status.user_id', '=', Auth::user()->id)
+            ->where('course_status.blog_id', '=', $id)
+            ->select("course_status.*")
+            ->get()->first();
+
+        if(!$blogs){
+            return "FALSE";
+        }
     }
 
 

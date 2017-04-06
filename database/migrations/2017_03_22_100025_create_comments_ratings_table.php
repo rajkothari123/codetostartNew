@@ -18,6 +18,8 @@ class CreateCommentsRatingsTable extends Migration
             $table->text('body');
             $table->integer('user_id');
             $table->integer('course_id');
+            $table->string('email');
+            $table->string('name');
 
             $table->timestamps();
         });

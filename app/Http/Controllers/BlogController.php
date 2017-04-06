@@ -190,6 +190,8 @@ class BlogController extends Controller
         $is_favourite=false;
         $blog_id=Blog::whereSlug($slug)->first();
 
+
+
         //Find category id in order to get all the blogs for that category
         $category_id=DB::table('blog_category')->where('blog_category.blog_id','=',$blog_id->id)
             ->select("blog_category.category_id")
@@ -202,6 +204,22 @@ class BlogController extends Controller
             ->where("bc.category_id", "=", $category_id)
             ->get();
 
+        //Next Blogs in that category
+        $next_blogs=DB::table('blogs')
+            ->join("blog_category as bc", "bc.blog_id", "=", "blogs.id")
+            ->where("bc.category_id", "=", $category_id)
+            ->where("blogs.id",">","$blog_id->id")
+            ->orderBy('blogs.preference','desc')
+            ->get();
+
+        //Get Previous Blog
+        $previous_blog=DB::table('blogs')
+            ->join("blog_category as bc", "bc.blog_id", "=", "blogs.id")
+            ->where("bc.category_id", "=", $category_id)
+            ->where("blogs.id","<","$blog_id->id")
+            ->orderBy('blogs.preference','desc')
+            ->limit(1)
+            ->get();
 
 
         //Name of the course
@@ -232,7 +250,7 @@ class BlogController extends Controller
         $course_name = DB::table('blog_category')->where('blog_category.blog_id','=',$blog_id->id)
             ->join("categories as c", "c.id", "=", "blog_category.category_id")
             ->join("courses as cu","cu.id","=","c.course_id")
-            ->select("cu.name")
+            ->select("cu.name","cu.slug")
             ->get('name');
 
         //Check whether the user have read the blog or not
@@ -245,11 +263,11 @@ class BlogController extends Controller
         if($course_status)
         {
             $is_status=true;
-            return view('blog.show',compact('blog','course_status','is_status','is_favourite','course_name','related_blogs'));
+            return view('blog.show',compact('blog','course_status','is_status','is_favourite','course_name','next_blogs','previous_blog'));
         }else{
 
             $course_status_to=CourseStatus::create(['user_id'=>Auth::user()->id,'blog_id'=>$blog_id->id]);
-            return view('blog.show',compact('blog','course_status','is_status','is_favourite','course_name','related_blogs'));
+            return view('blog.show',compact('blog','course_status','is_status','is_favourite','course_name','next_blogs','previous_blog'));
         }
 
     }

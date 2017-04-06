@@ -52,6 +52,9 @@ class User extends Authenticatable
         return $this->belongsTo(CourseStatus::class);
     }
 
+    public function comments(){
+        return $this->hasMany(Comment::class);
+    }
 
 
 }

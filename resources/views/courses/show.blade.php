@@ -25,7 +25,8 @@ START SITE HERE
                     <div class="bread">
                         <ol class="breadcrumb">
                             <li><a href="#">Home</a></li>
-                            <li class="active">Single Course</li>
+                            <li class="active"><a href="{{  route('courses.index') }}"> Courses</a></li>
+                            <li class="active">{{$course->name}}</li>
                         </ol>
                     </div><!-- end bread -->
                 </div><!-- /.pull-right -->
@@ -69,14 +70,14 @@ START SITE HERE
                                     <hr>
 
                                     @if(Auth::guest())
-                                        <a href="{{ route('login') }}" role="button" class="btn btn-success btn-block">Start Learning</a>
+                                        <input type="button" class="btn btn-success btn-block btn-lg" value="Start Learning" onclick="location.href='{{route('login')}}'">
                                     @elseif($is_enrolled)
-                                        <a href="#" class="btn btn-success btn-block">Enrolled</a>
+                                        <input type="button" class="btn btn-success btn-block btn-lg" value="Enrolled" onclick="">
                                     @else
                                         {!! Form::model($course,['method'=>'POST','action'=>['CourseController@enroll',$course->id]]) !!}
                                         {{ Form::hidden('course_id', $course->id) }}
                                         <div class="form-group">
-                                            {!! Form::submit("Enroll",['class'=>'btn btn-success btn-block']) !!}
+                                            {!! Form::submit("Enroll",['class'=>'btn btn-success btn-block btn-lg']) !!}
                                         </div>
                                         {!! Form::close() !!}
                                     @endif
@@ -107,12 +108,13 @@ START SITE HERE
 
                     <hr class="largeinvis">
 
-                    <div class="widget-title">
-                        <h3>Course Lessons</h3>
-                        <hr>
-                    </div><!-- end widget-title -->
+
 
                     @if(Auth::check() && $is_enrolled && $total!=0)
+                        <div class="widget-title">
+                            <h3>Course Progress</h3>
+                            <hr>
+                        </div><!-- end widget-title -->
                         <div class="progress">
                             <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="70"
                                  aria-valuemin="0" aria-valuemax="100" style="width:{{$total}}%">
@@ -122,6 +124,10 @@ START SITE HERE
                     @endif
 
                     @if(Auth::check() && $is_enrolled && $total==0)
+                        <div class="widget-title">
+                            <h3>Course Progress</h3>
+                            <hr>
+                        </div><!-- end widget-title -->
                         <div class="progress">
                             <div class="progress-bar progress-bar-striped active" role="progressbar"
                                  aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:40%">
@@ -129,6 +135,11 @@ START SITE HERE
                             </div>
                         </div>
                     @endif
+                    <hr class="largeinvis">
+                    <div class="widget-title">
+                        <h3>Course Lessons</h3>
+                        <hr>
+                    </div><!-- end widget-title -->
 
                     <div class="course-list normal-list">
                         <div class="video-wrapper course-widget clearfix">
@@ -161,17 +172,12 @@ START SITE HERE
                                             </td>
                                             <td>{{$blog->time}} Min</td>
                                             @if($is_enrolled)
-                                                @if($blogs->count()=='')
-                                                    <td><i  class="fa fa-close"></i></td>
-                                                @endif
 
-
-                                                @foreach($blogs as $bloge)
-                                                    @if($bloge->blog_id==$blog->id && Auth::user()->id==$bloge->user_id)
+                                                @if($blog->check_read_status($blog->id)=="FALSE")
+                                                        <td><i  class="fa fa-close"></i></td>
+                                                @else
                                                         <td><i  class="fa fa-check"></i></td>
-                                                    @endif
-                                                @endforeach
-
+                                                @endif
 
                                             @else
                                                 <td>Please Enroll</td>
@@ -296,7 +302,7 @@ START SITE HERE
                             </div><!-- end col -->
                         </div><!-- end row -->
 
-                        <div class="row">
+                        {{--<div class="row">
                             <div class="col-md-12">
                                 <nav>
                                     <ul class="pagination">
@@ -315,7 +321,8 @@ START SITE HERE
                                     </ul>
                                 </nav>
                             </div><!-- end col -->
-                        </div><!-- end row -->
+                        </div><!-- end row -->--}}
+
                     </div><!-- end container -->
                 </div><!-- end content -->
 
@@ -362,68 +369,10 @@ START SITE HERE
         </div><!-- end container -->
     </div><!-- end section -->
 
-    <footer class="copyrights">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-3 col-sm-12">
-                    <ul class="check">
-                        <li><a href="#">PSD to HTML</a></li>
-                        <li><a href="#">Templates</a></li>
-                        <li><a href="#">Documentation</a></li>
-                        <li><a href="#">Get a Support</a></li>
-                        <li><a href="#">Affiliate</a></li>
-                    </ul><!-- end check -->
-                </div><!-- end col -->
-                <div class="col-md-3 col-sm-12">
-                    <ul class="check">
-                        <li><a href="#">Blog</a></li>
-                        <li><a href="#">Terms of Usage</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="page-pricing.html">Pricing & Plan</a></li>
-                        <li><a href="page-become-a-trainer.html">Become a Trainer</a></li>
-                    </ul><!-- end check -->
-                </div><!-- end col -->
 
-                <div class="col-md-3 col-sm-12">
-                    <ul class="check">
-                        <li><a href="http://twitter.com/psdconverthtml" target="_blank"><i class="fa fa-twitter"></i> Twitter</a></li>
-                        <li><a href="#" target="_blank"><i class="fa fa-facebook"></i> Facebook</a></li>
-                        <li><a href="#" target="_blank"><i class="fa fa-google-plus"></i> Google Plus</a></li>
-                        <li><a href="#" target="_blank"><i class="fa fa-pinterest"></i> Pinterest</a></li>
-                        <li><a href="#" target="_blank"><i class="fa fa-dribbble"></i> Dribbble</a></li>
-                    </ul><!-- end check -->
-                </div><!-- end col -->
 
-                <div class="col-md-3 col-sm-12">
-                    <div class="newsletter">
-                        <p>Your email is safe with us and we hate spam as much as you do.</p>
-                        <form class="form-inline">
-                            <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Enter your email here..">
-                            </div>
-                            <button type="submit" class="btn btn-primary">Subscribe</button>
-                        </form>
-                    </div>
-                </div>
-            </div><!-- end row -->
 
-            <hr>
-
-            <div class="row">
-                <div class="col-md-6 col-sm-12">
-                    <div class="copylinks">
-                        <p>Copyrights &copy; 2016 <a href="http://psdconverthtml.com"> PSD to HTML</a> All Rights Reserved.</p>
-                    </div><!-- end links -->
-                </div><!-- end col -->
-
-                <div class="col-md-6 col-sm-12">
-                    <div class="footer-social text-right">
-                        <a class="dmtop" href="#"><i class="fa fa-angle-up"></i></a>
-                    </div>
-                </div><!-- end col -->
-            </div><!-- end row -->
-        </div><!-- end container -->
-    </footer><!-- end copyrights -->
+    @include('includes.footer')
 </div><!-- end wrapper -->
 
 
